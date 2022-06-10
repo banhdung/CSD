@@ -25,7 +25,7 @@ public class BSTree {
         }
        // t.preOrder();
         t.breadth();
-        t.dele(15);
+        t.dele(40);
         t.breadth();
        // System.out.println("Min:" + t.min());
     }

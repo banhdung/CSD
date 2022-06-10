@@ -202,7 +202,7 @@ public class MyTree {
         }
 
         //TH2 : p co  1 con
-        if ((p.left != null && p.right == null) && (p.left == null && p.right != null)) {
+        if ((p.left != null && p.right == null) || (p.left == null && p.right != null)) {
             //p la con trai(phai) co con trai , p la con trai(phai) co con phai , p la root
             if (parent == null) {
                 root = null;
@@ -213,15 +213,15 @@ public class MyTree {
                     parent.left = p.left;
                 } else if (p.left == null && p.right != null) {
                     parent.left = p.right;
-                   
+
                 }
 
             }
             if (parent.right == p) {
                 if (p.left != null && p.right == null) {
-                    parent.left = p.left;
+                    parent.right = p.left;
                 } else if (p.left == null && p.right != null) {
-                    parent.left = p.right;
+                    parent.right = p.right;
                 }
 
             }
@@ -298,5 +298,50 @@ public class MyTree {
         int max = hLeft >= hRight ? hLeft : hRight;
         return max + 1;
     }
-
+    
+    Node parent(Node ch) {
+        if (ch==root || ch==null) {
+            return null;
+        }
+        Node p = root;
+        Node parent = null;
+        while (p != null) {
+            if (p.info == ch.info) {
+                break;
+            }
+            parent = p;
+            if (p.info > ch.info) {
+                p = p.left;
+            } else {
+                p = p.right;
+            }
+        }
+        return parent;
+    }
+    void rotateRight(Node par) {
+        if (par == null||par.left==null) {
+            return ;
+        }
+        Node ch = par.left;
+        par.left=ch.right;
+        ch.right=par;
+        if (parent(par)==null) {
+            root = ch;
+            return;
+        }
+        parent(par).left=ch;
+    }
+    void rotateLeft(Node par) {
+        if (par == null||par.right==null) {
+            return ;
+        }
+        Node ch = par.right;
+        par.right=ch.left;
+        ch.left=par;
+        if (parent(par)==null) {
+            root = ch;
+            return;
+        }
+        parent(par).left=ch;
+    }
 }
