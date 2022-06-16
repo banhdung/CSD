@@ -5,21 +5,26 @@
  */
 package BSTobj;
 
+import java.io.IOException;
+
 /**
  *
  * @author banhdung
  */
 public class BSTree {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         MyTree t = new MyTree();
-        t.insert("Quang", 0);
-        t.insert("Huy", 0);
-        t.insert("Duc Anh", 0);
-        t.insert("Yen", 0);
-        t.insert("Tu", 0);
-        t.insert("Ba", 0);
-        t.breadth();
+        t.insert("Quang", 10);
+        t.insert("Huy", 20);
+        t.insert("Duc Anh", 30);
+        t.insert("Yen", 40);
+        t.insert("Tu", 50);
+        t.insert("Ba", 60);
+     
         
-        System.out.println(t.height(t.root));
+        
+        System.out.println(t.getInfo());
+     
+
     }
 }
