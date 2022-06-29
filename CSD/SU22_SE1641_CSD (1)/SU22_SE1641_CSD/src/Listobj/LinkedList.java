@@ -171,5 +171,8 @@ public class LinkedList {
         list.sort(1, 5);
         list.traverse();
         System.out.println("");
+        
+        
+        
     }
 }
