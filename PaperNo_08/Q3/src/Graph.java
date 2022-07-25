@@ -1,10 +1,139 @@
-Hàm F1
- 
-//output D  A  B  E  H  I  C  G  F
-//  A  B  E  H  I
+/* This program contains 2 parts: (1) and (2)
+   YOUR TASK IS TO COMPLETE THE PART  (2)  ONLY
+ */
+//(1)============================================
+import java.io.*;
+import java.util.*;
 
+//-------------------------------------------------------------------------------
+public class Graph {
 
+    int[][] a;
+    int n;
+    char v[];
+    int deg[];
 
+    Graph() {
+        v = "ABCDEFGHIJKLMNOP".toCharArray();
+        deg = new int[20];
+        a = new int[20][20];
+        n = 0;
+    }
+
+    void loadData(int k) { //do not edit this function
+        RandomAccessFile f;
+        int i, j, x;
+        String s;
+        StringTokenizer t;
+        a = new int[20][20];
+        try {
+            f = new RandomAccessFile("data.txt", "r");
+            for (i = 0; i < k; i++) {
+                f.readLine();
+            }
+            s = f.readLine();
+            s = s.trim();
+            n = Integer.parseInt(s);
+            for (i = 0; i < n; i++) {
+                s = f.readLine();
+                s = s.trim();
+                t = new StringTokenizer(s);
+                for (j = 0; j < n; j++) {
+                    x = Integer.parseInt(t.nextToken().trim());
+                    a[i][j] = x;
+                }
+            }
+            f.close();
+        } catch (Exception e) {
+        }
+    }
+
+    void dispAdj() {
+        int i, j;
+        for (i = 0; i < n; i++) {
+            System.out.println();
+            for (j = 0; j < n; j++) {
+                System.out.printf("%4d", a[i][j]);
+            }
+        }
+    }
+
+    void fvisit(int i, RandomAccessFile f) throws Exception {
+        f.writeBytes("  " + v[i]);
+    }
+
+    void fdispAdj(RandomAccessFile f) throws Exception {
+        int i, j;
+        f.writeBytes("n = " + n + "\r\n");
+        for (i = 0; i < n; i++) {
+            f.writeBytes("\r\n");
+            for (j = 0; j < n; j++) {
+                f.writeBytes("  " + a[i][j]);
+            }
+        }
+        f.writeBytes("\r\n");
+    }
+
+    void breadth(boolean[] en, int i, RandomAccessFile f) throws Exception {
+        Queue q = new Queue();
+        int r, j;
+        q.enqueue(i);
+        en[i] = true;
+        while (!q.isEmpty()) {
+            r = q.dequeue();
+            fvisit(r, f);
+            for (j = 0; j < n; j++) {
+                if (!en[j] && a[r][j] > 0) {
+                    q.enqueue(j);
+                    en[j] = true;
+                }
+            }
+        }
+    }
+
+    void breadth(int k, RandomAccessFile f) throws Exception {
+        boolean[] en = new boolean[20];
+        int i;
+        for (i = 0; i < n; i++) {
+            en[i] = false;
+        }
+        breadth(en, k, f);
+        for (i = 0; i < n; i++) {
+            if (!en[i]) {
+                breadth(en, i, f);
+            }
+        }
+    }
+
+    void depth(boolean[] visited, int k, RandomAccessFile f) throws Exception {
+        fvisit(k, f);
+        visited[k] = true;
+        for (int i = 0; i < n; i++) {
+            if (!visited[i] && a[k][i] > 0) {
+                depth(visited, i, f);
+            }
+        }
+    }
+
+    void depth(int k, RandomAccessFile f) throws Exception {
+        boolean[] visited = new boolean[20];
+        int i;
+        for (i = 0; i < n; i++) {
+            visited[i] = false;
+        }
+        depth(visited, k, f);
+        for (i = 0; i < n; i++) {
+            if (!visited[i]) {
+                depth(visited, i, f);
+            }
+        }
+    }
+
+    //===========================================================================
+    //(2)===YOU CAN EDIT OR EVEN ADD NEW FUNCTIONS IN THE FOLLOWING PART========
+    //===========================================================================
+    
+   int count = 0;
 
     int depthFirst2(boolean visited[], int i, int count, int min, int max, RandomAccessFile f) throws Exception {
         if (count >= min && count <= max) {
@@ -41,19 +170,11 @@ Hàm F1
 //output  B G A E F I C H D
  //  B(1) G(2) A(4) E(3) F(3) I(3) C(1) H(2) D(1)
 
+ 
 
-int deg(int i) {
-        int s, j;
-        s = 0;
-        for (j = 0; j < n; j++) {
-            s += a[i][j];
-        }
-        s += a[i][i];
-        return (s);
-    }
    
     void fvisit2(int i, RandomAccessFile f) throws Exception {
-        f.writeBytes(" " + v[i]+"("+deg(i)+")");
+        f.writeBytes(" " + v[i]+" ");
     }
 
 void depth2(boolean[] visited, int k, RandomAccessFile f) throws Exception {
@@ -79,11 +200,30 @@ void depth2(boolean[] visited, int k, RandomAccessFile f) throws Exception {
             }
         }
     }
-//--------------------------------------
+    
+    void f1() throws Exception {
+        loadData(1);
+        String fname = "f1.txt";
+        File g123 = new File(fname);
+        if (g123.exists()) {
+            g123.delete();
+        }
+        RandomAccessFile f = new RandomAccessFile(fname, "rw");
+        depth(0, f);
+        f.writeBytes("\r\n");
+        //-------------------------------------------------------------------------------------
+        /*You must keep statements pre-given in this function.
+       Your task is to insert statements here, just after this comment,
+       to complete the question in the exam paper.*/
 
-//Dijktra
-//  output A B C E D G
+        //-------------------------------------------------------------------------------------
+        depthFirst2(0, 1, 4, f);
+        f.writeBytes("\r\n");
+        f.close();
+    }
 
+    //=================================================================
+   
     void dijkstra(int fro, int to, RandomAccessFile f) throws Exception {
         int i, j, k, t, INF;
         INF = 999;
@@ -224,10 +364,10 @@ void depth2(boolean[] visited, int k, RandomAccessFile f) throws Exception {
 
         i = s.pop();
         int mm = listSelected.size() - count_index;
-        f.writeBytes("" + v[listSelected.get(mm)] + "," + d[listSelected.get(mm)]);
+        f.writeBytes("" + v[listSelected.get(mm)] + "-" + d[listSelected.get(mm)]);
         for (int m = listSelected.size() - (count_index - 1); m < listSelected.size(); m++) {
             int index = listSelected.get(m);
-            f.writeBytes(" " + v[index] + "," + d[index]);
+            f.writeBytes(" " + v[index] + "-" + d[index]);
         }
         f.writeBytes("\r\n");
     }
@@ -313,105 +453,27 @@ void depth2(boolean[] visited, int k, RandomAccessFile f) throws Exception {
         }
         f.writeBytes("\r\n");
     }
-    
-//-------------------
+    void f2() throws Exception {
+        loadData(12);
+        String fname = "f2.txt";
+        File g123 = new File(fname);
+        if (g123.exists()) {
+            g123.delete();
+        }
+        RandomAccessFile f = new RandomAccessFile(fname, "rw");
+        f.writeBytes("\r\n");
+        //-------------------------------------------------------------------------------------
+        /*You must keep statements pre-given in this function.
+       Your task is to insert statements here, just after this comment,
+       to complete the question in the exam paper.*/
+        // You can use the statement fvisit(i,f); i = 0, 1, 2,...,n-1 to display the vertex i to file f2.txt
+        //  and statement f.writeBytes(" " + k); to write  variable k to the file f2.txt
 
-//Euler
-
- boolean hasIsolated() {
-        for (int i = 0; i < n; i++) {
-            if (deg(i) == 0) {
-                return (true);
-            }
-        }
-        return (false);
+        //-------------------------------------------------------------------------------------
+        dijkstra(1, 5, f);
+        dijkstra(0, 6, f);
+        dijkstra2(0, 6, 3, f);
+        f.writeBytes("\r\n");
+        f.close();
     }
-    
-    boolean isConnected() {
-        boolean[] p = new boolean[n];
-        int i, j, r;
-        for (i = 0; i < n; i++) {
-            p[i] = false;
-        }
-        Stack s = new Stack();
-        s.push(0);
-        p[0] = true;
-        while (!s.isEmpty()) {
-            r = s.pop();
-            for (i = 0; i < n; i++) {
-                if (!p[i] && a[r][i] > 0) {
-                    s.push(i);
-                    p[i] = true;
-                }
-            }
-        }
-        for (i = 0; i < n; i++) {
-            if (!p[i]) {
-                return (false);
-            }
-        }
-        return (true);
-    }
-    
-    boolean isUnDirected() {
-        int i, j;
-        for (i = 0; i < n; i++) {
-            for (j = 0; j < n; j++) {
-                if (a[i][j] != a[j][i]) {
-                    return (false);
-                }
-            }
-        }
-        return (true);
-    }
-    
-    boolean allDegEven() {
-        for (int i = 0; i < n; i++) {
-            if (deg(i) % 2 == 1) {
-                return (false);
-            }
-        }
-        return (true);
-    }
-    
-    boolean hasEulerCycle() {
-        if (!hasIsolated() && isUnDirected() && isConnected() && allDegEven()) {
-            return (true);
-        } else {
-            return (false);
-        }
-    }
-    
-    void eulerCycle(int fro, RandomAccessFile f) throws IOException {
-        if (!hasEulerCycle()) {
-            return;
-        }
-        int[] eu = new int[100];
-        int m, i, j, r;
-        Stack s = new Stack();
-        s.push(fro);
-        j = 0;
-        while (!s.isEmpty()) {
-            r = s.top();
-            for (i = 0; i < n; i++) {
-                if (a[r][i] > 0) {
-                    break;
-                }
-            }
-            if (i == n) {
-                s.pop();
-                eu[j++] = r;
-                
-            } else {
-                s.push(i);
-                a[r][i]--;
-                a[i][r]--;
-            }
-        }
-        m = j;
-        for (i = 0; i < m; i++) {
-            f.writeBytes(v[eu[i]] + " ");
-        }
-    }
-
-
+}

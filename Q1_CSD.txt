@@ -1,0 +1,145 @@
+ //replace thang lon thu n
+    int MaxAgeN(int n) {
+        Node p = head;
+        int max = -1;
+        if (n == 1) {
+            max = p.info.type;
+            while (p.next != null) {
+                if (p.next.info.type > max) {
+                    max = p.next.info.type;
+                }
+                p = p.next;
+            }
+        }
+        else {
+            p = head;
+            int maxN = MaxAgeN(n-1);
+            while(p!=null) {
+                if (p.info.type<maxN) {
+                    max = p.info.type;
+                }
+                p=p.next;
+            }
+            p=head;
+            while (p.next != null) {
+                if (p.next.info.type > max && p.next.info.type<maxN) {
+                    max = p.next.info.type;
+                }
+                p = p.next;
+            }
+        }
+        return max;
+    }
+    void max1(){
+        int max = MaxAgeN(2);//edit here
+        Node p = head;
+        while(p!= null){
+            if(max == p.info.type){
+                p.info.place ="YY"; //edit here
+                break;
+            }
+            p = p.next;
+        }
+    }
+
+---------------------------------
+   void addLast(Castor x) {//You should write here appropriate statements to complete this function.
+        Node q = new Node(x);
+        if (isEmpty()) {
+            head = tail = q;
+        } else {
+            tail.next = q;
+            tail = q;
+        }
+    }
+
+---------------------
+ void addFirst(Castor x){
+       head = new Node(x,head);
+       if(tail==null) tail=head;
+     }
+
+---------------
+ void addFirst(Castor x) {
+        Node p = new Node(x);
+        if (isEmpty()) {
+            head = tail = p;
+            return;
+        }
+        p.next = head;
+        head = p;
+    }
+
+    void addAfter(Node p, Castor x) {
+        Node p1 = new Node(x);
+        if (isEmpty()) {
+            return;
+        }
+        p1.next = p.next;
+        p.next = p1;
+        if (p == tail) {
+            tail = p1;
+        }
+    }
+
+    void insert(Castor x, int index) {
+        int count = 0;
+        Node p = head;
+        while (p.next != null) {
+            if (index == 0) {
+                this.addFirst(x);
+                break;
+            }
+            if (count == index - 1) {
+                this.addAfter(p, x);
+                break;
+            }
+            count++;
+            p = p.next;
+        }
+    }
+
+------------------
+
+    int max()
+        {Node p=head;
+        int max=head.info.depth;
+        while(p!=null){
+            if(max<p.info.depth) max=p.info.depth;
+           p=p.next;
+         }
+        return max;
+     }
+ -----------------------------
+//sort 
+
+void sort(int startIndex, int endIndex) {       
+        int count = 0,m=0;
+        Castor tmp;
+        Node p = head,i;
+        while (p.next != null) {
+            if (count == startIndex) {
+                for (; p != null; p = p.next) {
+                    int n=0;
+                    for (i = p.next; i != null; i = i.next) {
+                        if (p.info.type > i.info.type) {
+                            tmp = p.info;
+                            p.info = i.info;
+                            i.info = tmp;
+                        }
+                        n++;
+                        if (m+n==endIndex-startIndex) {
+                            break;
+                        }
+                    }
+                    if (m+1==endIndex-startIndex) {
+                        break;
+                    }
+                    m++;
+                }
+                break;
+            }
+            count++;
+            p = p.next;
+        }
+    }

@@ -445,4 +445,214 @@ public void rotateRight(Node par) {
     }
 
 //----------------
+//xoa node thu may
 
+int count2 = 0;
+
+    void preOrder4(Node p, RandomAccessFile f) throws Exception {
+        if (p == null) {
+            return;
+        }
+        count2++;
+        if (count2 == 4) {
+            deleByCopy(p.info.sound);
+            return;
+        }
+
+        preOrder4(p.left, f);
+        preOrder4(p.right, f);
+    }
+---------------------------
+//xoay trai void
+ public void rotateL(Node par) {
+        
+        Node p = root;
+        Node gr = null;
+        while (p != null) {
+            if (p == par) {
+                break;
+            }
+            gr = p;
+            if (p.info.sound > par.info.sound) {
+                p = p.left;
+            } else {
+                p = p.right;
+            }
+        }
+
+        Node ch = par.right;
+        par.right = ch.left;
+        ch.left = par;
+        if (gr == null) {
+            root = ch;
+        } else if (gr.left == p) {
+            gr.left = ch;
+        } else if (gr.right == p) {
+            gr.right = ch;
+        }
+        
+    }
+//Tim thang node thu 2 theo breadth va lay no lam goc , xoa thang lon nhat trong cay subtree do
+
+ void breadth2(Node p, RandomAccessFile f) throws Exception {
+        int count = 0;
+        if (p == null) {
+            return;
+        }
+        Queue q = new Queue();
+        q.enqueue(p);
+        Node r;
+        while (!q.isEmpty()) {
+            r = q.dequeue();
+            if (r.left != null) {
+                count++;
+                if (count == 2) {
+                    if (r.left == null && r.right == null) {
+                        dele(r.info.depth);
+                    } else {
+                        dele(MaxN(r, 1)); //r la root cua sub-tree , n la lon thu bao nhieu
+                    }
+                }
+            }
+            if (r.left != null) {
+                q.enqueue(r.left);
+            }
+            if (r.right != null) {
+                q.enqueue(r.right);
+            }
+        }
+    }
+
+    int MaxN(Node p, int n) {
+        int max = -1;
+        Queue q = new Queue();
+        q.enqueue(p);
+        if (n == 1) {
+            while (!q.isEmpty()) {
+                p = (Node) q.dequeue();
+                if (p.info.depth > max) {
+                    max = p.info.depth;
+                }
+                if (p.left != null) {
+                    q.enqueue(p.left);
+                }
+                if (p.right != null) {
+                    q.enqueue(p.right);
+                }
+            }
+        } else {
+            int maxN = MaxN(p, n - 1);
+            max = 0;
+            while (!q.isEmpty()) {
+                p = (Node) q.dequeue();
+                if (p.info.depth > max && p.info.depth < maxN) {
+                    max = p.info.depth;
+                }
+                if (p.left != null) {
+                    q.enqueue(p.left);
+                }
+                if (p.right != null) {
+                    q.enqueue(p.right);
+                }
+            }
+        }
+        return max;
+    }
+
+    void dele(int xDepth) {
+        if (isEmpty()) {
+            return;
+        }
+        Node p = root;
+        Node parent = null;
+        while (p != null) {
+            if (p.info.depth == xDepth) {
+                break;
+            }
+            parent = p;
+            if (p.info.depth > xDepth) {
+                p = p.left;
+            } else {
+                p = p.right;
+            }
+        }
+        if (p == null) {
+            return;
+        }
+        if (p.left == null && p.right == null) {
+            if (parent == null) {
+                root = null;
+                return;
+            }
+            if (parent.left == p) {
+                parent.left = null;
+            } else {
+                parent.right = null;
+            }
+        }
+        if ((p.left != null && p.right == null) || (p.left == null && p.right != null)) {
+            if (p == root) {
+                if (p.left != null) {
+                    root = p.left;
+                } else {
+                    root = p.right;
+                }
+                return;
+            }
+            if (parent.left == p) {
+                if (p.left != null) {
+                    parent.left = p.left;
+                } else {
+                    parent.left = p.right;
+                }
+            } else {
+                if (p.left != null) {
+                    parent.right = p.left;
+                } else {
+                    parent.right = p.right;
+                }
+            }
+        }
+        if (p.left != null && p.right != null) {
+            Node rm = p.left;
+            Node parentRM = null;
+            while (rm.right != null) {
+                parentRM = rm;
+                rm = rm.right;
+            }
+            p.info = rm.info;
+            if (parentRM == null) {
+                p.left = rm.left;
+            } else {
+                parentRM.right = rm.left;
+            }
+        }
+    }
+
+-------------------------------
+//tim thang  thu 2 con co trai duyet theo breath
+ void breadth3(Node p, RandomAccessFile f) throws Exception {
+        int count3 = 0;
+        if (p == null) {
+            return;
+        }
+        Queue q = new Queue();
+        q.enqueue(p);
+        Node r;
+        while (!q.isEmpty()) {
+            r = q.dequeue();
+            if(r.left != null ){
+                
+                count3++;
+                if(count3 == 2){
+                    rotateRight(r);
+                }
+            }
+            if (r.left != null) {
+                q.enqueue(r.left);
+            }
+            if (r.right != null) {
+                q.enqueue(r.right);
+            }
+        }
+    }
